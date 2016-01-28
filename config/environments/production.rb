@@ -1,6 +1,9 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  # Without the line below, you may have difficulty deleting once deployed to Heroku.
+  config.serve_static_assets = true
+
   # Code is not reloaded between requests.
   config.cache_classes = true
 

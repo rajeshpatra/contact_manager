@@ -28,7 +28,7 @@ RSpec.describe PhoneNumbersController, type: :controller do
   }
 
   let(:invalid_attributes) {
-    { number: nil, person_id: nil}
+      { number: nil, person_id: nil}
   }
 
   # This should return the minimal set of values that should be in the session
@@ -69,6 +69,11 @@ RSpec.describe PhoneNumbersController, type: :controller do
 
   describe "POST #create" do
     context "with valid params" do
+
+      let(:alice) { Person.create(first_name: 'Alice', last_name: 'Smith') }
+      let(:valid_attributes) { {number: '555-1234', person_id: alice.id} }
+
+      
       it "creates a new PhoneNumber" do
         expect {
           post :create, {:phone_number => valid_attributes}, valid_session
@@ -81,9 +86,11 @@ RSpec.describe PhoneNumbersController, type: :controller do
         expect(assigns(:phone_number)).to be_persisted
       end
 
-      it "redirects to the created phone_number" do
+      it "redirects to the phone number's person" do
+        alice = Person.create(first_name: 'Alice', last_name: 'Smith')
+        valid_attributes = {number: '555-8888', person_id: alice.id}
         post :create, {:phone_number => valid_attributes}, valid_session
-        expect(response).to redirect_to(PhoneNumber.last)
+        expect(response).to redirect_to(alice)
       end
     end
 
@@ -91,7 +98,7 @@ RSpec.describe PhoneNumbersController, type: :controller do
       it "assigns a newly created but unsaved phone_number as @phone_number" do
         post :create, {:phone_number => invalid_attributes}, valid_session
         expect(assigns(:phone_number)).to be_a_new(PhoneNumber)
-      end
+      end 
 
       it "re-renders the 'new' template" do
         post :create, {:phone_number => invalid_attributes}, valid_session
